@@ -2,8 +2,8 @@
   "clients": {
     "esp32_01": {
       "sensor": {
-        "temp": 25,
-        "humi": 63
+        "temp": 26,
+        "humi": 69
       }
     },
     "esp32_02": {

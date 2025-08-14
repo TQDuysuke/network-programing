@@ -1,61 +1,83 @@
-# Buổi 5: Ứng dụng điều khiển từ server
+# Buổi 5: Server gửi lệnh điều khiển cho ESP32
 
-> Được tạo bởi Phòng thí nghiệm PLC & IIoT - Trường Đại học Cần Thơ
+## Mô tả
+- Server nhận dữ liệu cảm biến và lệnh điều khiển từ ESP32/user.
+- Lưu dữ liệu vào file `data.json`.
+- Xác thực API key và UID.
 
-# ------------------------------------------------------------
-# Code thuộc bản quyền Phòng thí nghiệm PLC & IIoT
-# Trường Đại học Cần Thơ
-# ------------------------------------------------------------
-# Buổi 5: Ứng dụng điều khiển từ server
+## Chức năng chính
+1. POST `/data`: ESP32 gửi dữ liệu cảm biến, server lưu vào `data.json`.
+2. POST `/command`: User gửi lệnh điều khiển, server lưu vào `data.json`.
+3. GET `/data`: Lấy dữ liệu cảm biến hiện tại.
+4. GET `/command`: Lấy lệnh điều khiển hiện tại.
 
+## Công nghệ sử dụng
+- Node.js
+- Express
+- File System (fs)
+- Path
+- Middleware kiểm tra API key và UID (import từ `api.js`)
 
-## Mục tiêu
-- Server gửi lệnh điều khiển về cho ESP32, lưu lệnh vào file data.json.
-- ESP32 vừa gửi dữ liệu cảm biến, vừa nhận lệnh điều khiển từ server.
+## Hướng dẫn chạy
+1. Cài đặt các package cần thiết:
+   ```cmd
+   npm install
+   ```
+2. Chạy server:
+   ```cmd
+   node server.js
+   ```
+3. Truy cập server tại địa chỉ: `http://localhost:3000`.
 
+## Giải thích chi tiết mã nguồn server
+...existing code...
 
-## Nội dung
-1. Tạo API nhận lệnh điều khiển từ client (Postman) và lưu vào data.json
-   - [ ] Ảnh: Code API ![placeholder](images/api-code.png)
-   - [ ] Ảnh: File data.json ![placeholder](images/data-json.png)
-2. ESP32 gửi dữ liệu cảm biến lên server (POST /data), nhận lệnh điều khiển (GET /command)
-   - [ ] Ảnh: ESP32 nhận lệnh ![placeholder](images/esp32-receive.png)
-3. Thực hiện điều khiển thiết bị dựa trên lệnh nhận được
-   - [ ] Ảnh: Thiết bị được điều khiển ![placeholder](images/device-control.png)
+## Giải thích chi tiết mã nguồn ESP32
 
-
-## Ví dụ request
-### Gửi dữ liệu cảm biến
-```http
-POST http://localhost:3000/data
-Content-Type: application/json
-x-api-key: 123456
-uid: esp32_01
-{
-   "temp": 30,
-   "humi": 60
+### 1. Kết nối WiFi
+```cpp
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+WiFi.begin(ssid, password);
+while (WiFi.status() != WL_CONNECTED) {
+  delay(1000);
+  Serial.println("Connecting to WiFi...");
 }
+Serial.println("Connected to WiFi");
 ```
+- `ssid` và `password`: Thông tin mạng WiFi cần kết nối.
+- `WiFi.begin`: Bắt đầu kết nối WiFi.
+- `WL_CONNECTED`: Kiểm tra trạng thái kết nối.
 
-### Gửi lệnh điều khiển
-```http
-POST http://localhost:3000/command
-Content-Type: application/json
-x-api-key: 123456
-uid: user_01
-{
-   "led": "on"
+### 2. Gửi dữ liệu cảm biến
+```cpp
+HTTPClient http;
+http.begin(serverDataUrl);
+http.addHeader("Content-Type", "application/json");
+http.addHeader("apiKey", apiKey);
+http.addHeader("uid", uid);
+int httpResponseCode = http.POST("{\"temperature\": 25}");
+http.end();
+```
+- `serverDataUrl`: URL của server để gửi dữ liệu.
+- `http.POST`: Gửi dữ liệu cảm biến dưới dạng JSON.
+
+### 3. Nhận lệnh điều khiển
+```cpp
+http.begin(serverCmdUrl);
+http.addHeader("apiKey", apiKey);
+http.addHeader("uid", uid);
+int httpResponseCode = http.GET();
+if (httpResponseCode > 0) {
+  String payload = http.getString();
+  Serial.println(payload);
 }
+http.end();
 ```
+- `serverCmdUrl`: URL của server để nhận lệnh điều khiển.
+- `http.GET`: Lấy lệnh điều khiển từ server.
 
-### ESP32 lấy lệnh điều khiển
-```http
-GET http://localhost:3000/command
-x-api-key: 123456
-uid: esp32_01
-```
-
-
-## Yêu cầu
-- Chụp ảnh từng bước thực hiện và dán vào các vị trí placeholder.
-- Thử gửi lệnh điều khiển và kiểm tra trạng thái thiết bị.
+## Placeholder cho hình ảnh
+- Hình 1: Sơ đồ kết nối ESP32 với server.
+- Hình 2: Giao diện Postman gửi request POST `/data`.
+- Hình 3: Giao diện Postman gửi request GET `/command`.

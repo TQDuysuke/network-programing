@@ -1,17 +1,29 @@
 # Buổi 1: Cài đặt môi trường làm việc
 
-## Mục tiêu
-- Cài đặt Node.js, VS Code, Postman, GIT (tùy chọn)
+## I. Cài đặt môi trường làm việc
 
-## Nội dung
-1. Cài đặt Node.js
-   - [ ] Ảnh: Cài đặt Node.js ![placeholder](images/nodejs.png)
-2. Cài đặt VS Code
-   - [ ] Ảnh: Cài đặt VS Code ![placeholder](images/vscode.png)
-3. Cài đặt Postman
-   - [ ] Ảnh: Cài đặt Postman ![placeholder](images/postman.png)
-4. Cài đặt GIT (tùy chọn)
-   - [ ] Ảnh: Cài đặt GIT ![placeholder](images/git.png)
+### a. Cài đặt môi trường làm việc Node.js
+- Tải Node.js từ [trang chủ Node.js](https://nodejs.org/).
+- Cài đặt Node.js theo hướng dẫn trên trang web.
+- Kiểm tra cài đặt bằng lệnh:
+  ```cmd
+  node -v
+  npm -v
+  ```
 
-## Yêu cầu
-- Chụp ảnh màn hình từng phần mềm đã cài đặt và dán vào các vị trí placeholder trên.
+### b. Cài đặt VS Code
+- Tải Visual Studio Code từ [trang chủ VS Code](https://code.visualstudio.com/).
+- Cài đặt VS Code theo hướng dẫn.
+- Cài đặt các extension cần thiết như: Prettier, ESLint.
+
+### c. Cài đặt Postman
+- Tải Postman từ [trang chủ Postman](https://www.postman.com/).
+- Cài đặt Postman để kiểm tra API.
+
+### d. Cài đặt GIT (tùy chọn)
+- Tải GIT từ [trang chủ GIT](https://git-scm.com/).
+- Cài đặt GIT để quản lý mã nguồn.
+- Kiểm tra cài đặt bằng lệnh:
+  ```cmd
+  git --version
+  ```

@@ -1,65 +1,82 @@
-# ------------------------------------------------------------
-# Code thuộc bản quyền Phòng thí nghiệm PLC & IIoT
-# Trường Đại học Cần Thơ
-# ------------------------------------------------------------
-# Buổi 6: Quản lý multi-client nâng cao
+# Buổi 6: Server quản lý multi-client
 
-## Mục tiêu
-- Server quản lý nhiều client (user, esp32) cùng lúc, mỗi client có API key và UID riêng biệt.
-- User có thể điều khiển từng ESP32 qua UID, các client ESP32 gửi dữ liệu cảm biến và nhận lệnh điều khiển độc lập.
-- Các client có thể tương tác với nhau thông qua server.
+## Mô tả
+- Server quản lý nhiều client.
+- Lưu dữ liệu và lệnh điều khiển từ các client vào file `data.json`.
 
+## Chức năng chính
+1. POST `/data/{uid}`: Client gửi dữ liệu cảm biến, server lưu vào `data.json`.
+2. POST `/command{uid}`: Client gửi lệnh điều khiển, server lưu vào `data.json`.
+3. GET `/data{uid}`: Lấy dữ liệu cảm biến hiện tại.
+4. GET `/command{uid}`: Lấy lệnh điều khiển hiện tại.
 
-## Nội dung
-1. Thiết kế API phân biệt client qua UID, mỗi client có API key riêng (khuyến khích tạo nhiều API key cho user/esp32)
-   - [ ] Ảnh: Code API ![placeholder](images/api-code.png)
-   - [ ] Ảnh: File data.json ![placeholder](images/data-json.png)
-   - Server sẽ tự động tạo client mới nếu UID chưa tồn tại (có thể dùng cho demo hoặc phát triển nhanh, muốn bảo mật hơn thì cần kiểm tra UID hợp lệ).
-2. Lưu trạng thái cảm biến và lệnh điều khiển riêng biệt cho từng UID
-   - [ ] Ảnh: Log trạng thái ![placeholder](images/status-log.png)
-   - Dữ liệu cảm biến lưu tại clients[uid].sensor, lệnh điều khiển lưu tại commands[uid].
-3. User gửi lệnh điều khiển tới ESP32 qua UID, ESP32 lấy lệnh và gửi dữ liệu cảm biến về server
-   - [ ] Ảnh: Giao diện kiểm thử ![placeholder](images/postman-multi.png)
-   - User gửi POST /command/:id, ESP32 gửi POST /data/:id và GET /command/:id.
-4. Các client có thể lấy trạng thái cảm biến của nhau qua API
-   - GET /data/:id hoặc GET /status.
+## Công nghệ sử dụng
+- Node.js
+- Express
+- File System (fs)
+- Path
+- Middleware kiểm tra API key và UID (import từ `api.js`)
 
-## Ví dụ request
-```http
-# ESP32 gửi dữ liệu cảm biến
-POST http://localhost:3000/data/esp32_01
-Content-Type: application/json
-x-api-key: <api_key_esp32_01>
-uid: esp32_01
-{
-  "temp": 30,
-  "humi": 60
+## Hướng dẫn chạy
+1. Cài đặt các package cần thiết:
+   ```cmd
+   npm install
+   ```
+2. Chạy server:
+   ```cmd
+   node server.js
+   ```
+3. Truy cập server tại địa chỉ: `http://localhost:3000`.
+
+## Giải thích chi tiết mã nguồn server
+...existing code...
+
+## Giải thích chi tiết mã nguồn ESP32
+
+### 1. Kết nối WiFi
+```cpp
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+WiFi.begin(ssid, password);
+while (WiFi.status() != WL_CONNECTED) {
+  delay(1000);
+  Serial.println("Connecting to WiFi...");
 }
-
-# User gửi lệnh điều khiển cho ESP32
-POST http://localhost:3000/command/esp32_01
-Content-Type: application/json
-x-api-key: <api_key_user>
-uid: user_01
-{
-  "led": "on"
-}
-
-# ESP32 lấy lệnh điều khiển của mình
-GET http://localhost:3000/command/esp32_01
-x-api-key: <api_key_esp32_01>
-uid: esp32_01
-
-# User hoặc client khác lấy trạng thái cảm biến của ESP32
-GET http://localhost:3000/data/esp32_01
-x-api-key: <api_key_user>
-uid: user_01
-
-# Xem trạng thái cảm biến của tất cả client
-GET http://localhost:3000/status
-x-api-key: <api_key_user>
-uid: user_01
+Serial.println("Connected to WiFi");
 ```
+- `ssid` và `password`: Thông tin mạng WiFi cần kết nối.
+- `WiFi.begin`: Bắt đầu kết nối WiFi.
+- `WL_CONNECTED`: Kiểm tra trạng thái kết nối.
 
-## Yêu cầu
-- Chụp ảnh từng bước thực hiện và dán vào các vị trí placeholder.
+### 2. Gửi dữ liệu cảm biến
+```cpp
+HTTPClient http;
+http.begin(serverDataUrl);
+http.addHeader("Content-Type", "application/json");
+http.addHeader("apiKey", apiKey);
+http.addHeader("uid", uid);
+int httpResponseCode = http.POST("{\"temperature\": 25}");
+http.end();
+```
+- `serverDataUrl`: URL của server để gửi dữ liệu.
+- `http.POST`: Gửi dữ liệu cảm biến dưới dạng JSON.
+
+### 3. Nhận lệnh điều khiển
+```cpp
+http.begin(serverCmdUrl);
+http.addHeader("apiKey", apiKey);
+http.addHeader("uid", uid);
+int httpResponseCode = http.GET();
+if (httpResponseCode > 0) {
+  String payload = http.getString();
+  Serial.println(payload);
+}
+http.end();
+```
+- `serverCmdUrl`: URL của server để nhận lệnh điều khiển.
+- `http.GET`: Lấy lệnh điều khiển từ server.
+
+## Placeholder cho hình ảnh
+- Hình 1: Sơ đồ kết nối ESP32 với server.
+- Hình 2: Giao diện Postman gửi request POST `/data`.
+- Hình 3: Giao diện Postman gửi request GET `/command`.
