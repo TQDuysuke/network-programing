@@ -1,0 +1,24 @@
+{
+  "clients": {
+    "esp32_01": {
+      "sensor": {
+        "temp": 25,
+        "humi": 63
+      }
+    },
+    "esp32_02": {
+      "sensor": {
+        "temp": 29,
+        "humi": 62
+      }
+    }
+  },
+  "commands": {
+    "esp32_01": {
+      "led": "on"
+    },
+    "esp32_02": {
+      "led": "off"
+    }
+  }
+}
