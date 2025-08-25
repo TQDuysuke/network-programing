@@ -27,3 +27,9 @@
   ```cmd
   git --version
   ```
+
+### giả lập debug
+request lấy thử thông qua postman
+
+- thao tác - cách làm - kết quả
+
