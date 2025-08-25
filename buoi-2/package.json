@@ -1,0 +1,16 @@
+{
+  "name": "buoi-2",
+  "version": "1.0.0",
+  "description": "Mô tả:\r - Thư mục chứa `server.js` làm ví dụ server Node.js cơ bản (HTTP hoặc Express tuỳ bạn cập nhật).",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

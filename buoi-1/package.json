@@ -1,0 +1,15 @@
+{
+  "name": "buoi-1",
+  "version": "1.0.0",
+  "description": "Mô tả:\r - Đây là thư mục cho bài tập 1. Hiện tại không có file server cụ thể; giữ cấu trúc như một project Node.js nhỏ.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

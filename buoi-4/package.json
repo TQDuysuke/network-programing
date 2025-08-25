@@ -1,0 +1,16 @@
+{
+  "name": "buoi-4",
+  "version": "1.0.0",
+  "description": "Mô tả:\r - Thư mục chứa `server.js`, `api.js`, `client.js`, `data.json` và mã `esp32_code.ino`.\r - Mục tiêu: minh hoạ server API (Express) và client (Node) giao tiếp, cùng ví dụ code cho ESP32.",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

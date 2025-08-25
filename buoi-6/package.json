@@ -1,0 +1,16 @@
+{
+  "name": "buoi-6",
+  "version": "1.0.0",
+  "description": "Mô tả:\r - Thư mục chứa `server.js`, `api.js`, `data.json`, và `esp32_code.ino`.\r - Mục tiêu: server Express trả dữ liệu từ `data.json` và nhận dữ liệu từ ESP32.",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
