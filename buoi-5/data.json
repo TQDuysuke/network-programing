@@ -1,9 +1,0 @@
-{
-  "command": {
-    "led": "off"
-  },
-  "sensor": {
-    "temp": 30,
-    "humi": 64
-  }
-}
